@@ -1,0 +1,660 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AB0000000000000000000070 /* Audio Balance Agent.app in Embed Login Item */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000011 /* Audio Balance Agent.app */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AB0000000000000000000071 /* dev.joshuapark.AudioBalance.Agent.plist in Embed Launch Agent */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000013 /* dev.joshuapark.AudioBalance.Agent.plist */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		AB0000000000000000000080 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AB0000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AB0000000000000000000031;
+			remoteInfo = AudioBalanceAgent;
+		};
+		AB0000000000000000000082 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AB0000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AB0000000000000000000030;
+			remoteInfo = AudioBalance;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		AB0000000000000000000043 /* Embed Login Item */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/LoginItems;
+			dstSubfolderSpec = 1;
+			files = (
+				AB0000000000000000000070 /* Audio Balance Agent.app in Embed Login Item */,
+			);
+			name = "Embed Login Item";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AB0000000000000000000044 /* Embed Launch Agent */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/LaunchAgents;
+			dstSubfolderSpec = 1;
+			files = (
+				AB0000000000000000000071 /* dev.joshuapark.AudioBalance.Agent.plist in Embed Launch Agent */,
+			);
+			name = "Embed Launch Agent";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		AB0000000000000000000010 /* Audio Balance.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Audio Balance.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB0000000000000000000011 /* Audio Balance Agent.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Audio Balance Agent.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB0000000000000000000012 /* AudioBalanceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AudioBalanceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB0000000000000000000013 /* dev.joshuapark.AudioBalance.Agent.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = dev.joshuapark.AudioBalance.Agent.plist; path = LaunchAgents/dev.joshuapark.AudioBalance.Agent.plist; sourceTree = "<group>"; };
+		AB0000000000000000000014 /* AudioBalanceUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AudioBalanceUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		AB0000000000000000000020 /* AudioBalance */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = AudioBalance;
+			sourceTree = "<group>";
+		};
+		AB0000000000000000000021 /* AudioBalanceAgent */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = AudioBalanceAgent;
+			sourceTree = "<group>";
+		};
+		AB0000000000000000000022 /* AudioBalanceTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = AudioBalanceTests;
+			sourceTree = "<group>";
+		};
+		AB0000000000000000000023 /* Shared */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		AB0000000000000000000024 /* Icon */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Icon;
+			sourceTree = "<group>";
+		};
+		AB0000000000000000000025 /* AudioBalanceUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = AudioBalanceUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AB0000000000000000000041 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AB0000000000000000000051 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AB0000000000000000000061 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AB0000000000000000000064 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AB0000000000000000000002 = {
+			isa = PBXGroup;
+			children = (
+				AB0000000000000000000020 /* AudioBalance */,
+				AB0000000000000000000021 /* AudioBalanceAgent */,
+				AB0000000000000000000023 /* Shared */,
+				AB0000000000000000000024 /* Icon */,
+				AB0000000000000000000013 /* dev.joshuapark.AudioBalance.Agent.plist */,
+				AB0000000000000000000022 /* AudioBalanceTests */,
+				AB0000000000000000000025 /* AudioBalanceUITests */,
+				AB0000000000000000000003 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AB0000000000000000000003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AB0000000000000000000010 /* Audio Balance.app */,
+				AB0000000000000000000011 /* Audio Balance Agent.app */,
+				AB0000000000000000000012 /* AudioBalanceTests.xctest */,
+				AB0000000000000000000014 /* AudioBalanceUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AB0000000000000000000030 /* AudioBalance */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AB0000000000000000000091 /* Build configuration list for PBXNativeTarget "AudioBalance" */;
+			buildPhases = (
+				AB0000000000000000000040 /* Sources */,
+				AB0000000000000000000041 /* Frameworks */,
+				AB0000000000000000000042 /* Resources */,
+				AB0000000000000000000043 /* Embed Login Item */,
+				AB0000000000000000000044 /* Embed Launch Agent */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AB0000000000000000000081 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				AB0000000000000000000020 /* AudioBalance */,
+				AB0000000000000000000023 /* Shared */,
+				AB0000000000000000000024 /* Icon */,
+			);
+			name = AudioBalance;
+			packageProductDependencies = (
+			);
+			productName = AudioBalance;
+			productReference = AB0000000000000000000010 /* Audio Balance.app */;
+			productType = "com.apple.product-type.application";
+		};
+		AB0000000000000000000031 /* AudioBalanceAgent */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AB0000000000000000000092 /* Build configuration list for PBXNativeTarget "AudioBalanceAgent" */;
+			buildPhases = (
+				AB0000000000000000000050 /* Sources */,
+				AB0000000000000000000051 /* Frameworks */,
+				AB0000000000000000000052 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				AB0000000000000000000021 /* AudioBalanceAgent */,
+				AB0000000000000000000023 /* Shared */,
+				AB0000000000000000000024 /* Icon */,
+			);
+			name = AudioBalanceAgent;
+			packageProductDependencies = (
+			);
+			productName = AudioBalanceAgent;
+			productReference = AB0000000000000000000011 /* Audio Balance Agent.app */;
+			productType = "com.apple.product-type.application";
+		};
+		AB0000000000000000000032 /* AudioBalanceTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AB0000000000000000000093 /* Build configuration list for PBXNativeTarget "AudioBalanceTests" */;
+			buildPhases = (
+				AB0000000000000000000060 /* Sources */,
+				AB0000000000000000000061 /* Frameworks */,
+				AB0000000000000000000062 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				AB0000000000000000000022 /* AudioBalanceTests */,
+				AB0000000000000000000023 /* Shared */,
+			);
+			name = AudioBalanceTests;
+			packageProductDependencies = (
+			);
+			productName = AudioBalanceTests;
+			productReference = AB0000000000000000000012 /* AudioBalanceTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		AB0000000000000000000033 /* AudioBalanceUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AB0000000000000000000094 /* Build configuration list for PBXNativeTarget "AudioBalanceUITests" */;
+			buildPhases = (
+				AB0000000000000000000063 /* Sources */,
+				AB0000000000000000000064 /* Frameworks */,
+				AB0000000000000000000065 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AB0000000000000000000083 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				AB0000000000000000000025 /* AudioBalanceUITests */,
+				AB0000000000000000000023 /* Shared */,
+			);
+			name = AudioBalanceUITests;
+			packageProductDependencies = (
+			);
+			productName = AudioBalanceUITests;
+			productReference = AB0000000000000000000014 /* AudioBalanceUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AB0000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2630;
+				LastUpgradeCheck = 2630;
+				TargetAttributes = {
+					AB0000000000000000000030 = {
+						CreatedOnToolsVersion = 26.3;
+					};
+					AB0000000000000000000031 = {
+						CreatedOnToolsVersion = 26.3;
+					};
+					AB0000000000000000000032 = {
+						CreatedOnToolsVersion = 26.3;
+					};
+					AB0000000000000000000033 = {
+						CreatedOnToolsVersion = 26.3;
+						TestTargetID = AB0000000000000000000030;
+					};
+				};
+			};
+			buildConfigurationList = AB0000000000000000000090 /* Build configuration list for PBXProject "AudioBalance" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				de,
+				es,
+				fr,
+				it,
+				ja,
+				ko,
+				"pt-BR",
+				"zh-Hans",
+				"zh-Hant",
+			);
+			mainGroup = AB0000000000000000000002;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = AB0000000000000000000003 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AB0000000000000000000030 /* AudioBalance */,
+				AB0000000000000000000031 /* AudioBalanceAgent */,
+				AB0000000000000000000032 /* AudioBalanceTests */,
+				AB0000000000000000000033 /* AudioBalanceUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AB0000000000000000000042 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AB0000000000000000000052 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AB0000000000000000000062 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AB0000000000000000000065 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AB0000000000000000000040 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AB0000000000000000000050 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AB0000000000000000000060 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AB0000000000000000000063 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AB0000000000000000000081 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AB0000000000000000000031 /* AudioBalanceAgent */;
+			targetProxy = AB0000000000000000000080 /* PBXContainerItemProxy */;
+		};
+		AB0000000000000000000083 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AB0000000000000000000030 /* AudioBalance */;
+			targetProxy = AB0000000000000000000082 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		AB00000000000000000000A0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = TCQ6328PP6;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				CURRENT_PROJECT_VERSION = 1;
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		AB00000000000000000000A1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = TCQ6328PP6;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				CURRENT_PROJECT_VERSION = 1;
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		AB00000000000000000000A2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Audio Balance";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Joshua Park. Licensed under the GPLv3.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.joshuapark.AudioBalance;
+				PRODUCT_MODULE_NAME = AudioBalance;
+				PRODUCT_NAME = "Audio Balance";
+			};
+			name = Debug;
+		};
+		AB00000000000000000000A3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Audio Balance";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Joshua Park. Licensed under the GPLv3.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.joshuapark.AudioBalance;
+				PRODUCT_MODULE_NAME = AudioBalance;
+				PRODUCT_NAME = "Audio Balance";
+			};
+			name = Release;
+		};
+		AB00000000000000000000A4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Audio Balance";
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Joshua Park. Licensed under the GPLv3.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.joshuapark.AudioBalance.Agent;
+				PRODUCT_MODULE_NAME = AudioBalanceAgent;
+				PRODUCT_NAME = "Audio Balance Agent";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		AB00000000000000000000A5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Audio Balance";
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Joshua Park. Licensed under the GPLv3.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.joshuapark.AudioBalance.Agent;
+				PRODUCT_MODULE_NAME = AudioBalanceAgent;
+				PRODUCT_NAME = "Audio Balance Agent";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		AB00000000000000000000A6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.joshuapark.AudioBalance.Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		AB00000000000000000000A7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.joshuapark.AudioBalance.Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		AB00000000000000000000A8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_APP_SANDBOX = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.joshuapark.AudioBalance.UITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = AudioBalance;
+			};
+			name = Debug;
+		};
+		AB00000000000000000000A9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_APP_SANDBOX = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.joshuapark.AudioBalance.UITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = AudioBalance;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AB0000000000000000000090 /* Build configuration list for PBXProject "AudioBalance" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AB00000000000000000000A0 /* Debug */,
+				AB00000000000000000000A1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AB0000000000000000000091 /* Build configuration list for PBXNativeTarget "AudioBalance" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AB00000000000000000000A2 /* Debug */,
+				AB00000000000000000000A3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AB0000000000000000000092 /* Build configuration list for PBXNativeTarget "AudioBalanceAgent" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AB00000000000000000000A4 /* Debug */,
+				AB00000000000000000000A5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AB0000000000000000000093 /* Build configuration list for PBXNativeTarget "AudioBalanceTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AB00000000000000000000A6 /* Debug */,
+				AB00000000000000000000A7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AB0000000000000000000094 /* Build configuration list for PBXNativeTarget "AudioBalanceUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AB00000000000000000000A8 /* Debug */,
+				AB00000000000000000000A9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = AB0000000000000000000001 /* Project object */;
+}

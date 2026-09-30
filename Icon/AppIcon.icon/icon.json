@@ -1,97 +1,94 @@
 {
-  "fill": {
-    "linear-gradient": [
-      "srgb:0.39200,0.94900,0.52200,1.00000",
-      "srgb:0.01600,0.78800,0.27800,1.00000"
-    ],
-    "orientation": {
-      "start": {
-        "x": 0.5,
-        "y": 0
-      },
-      "stop": {
-        "x": 0.5,
-        "y": 1
-      }
-    }
+  "fill" : {
+    "linear-gradient" : [
+      "display-p3:0.17000,0.55900,0.94400,1.00000",
+      "srgb:0.10100,0.39100,0.91900,1.00000"
+    ]
   },
-  "groups": [
+  "groups" : [
     {
-      "layers": [
+      "layers" : [
         {
-          "image-name": "balance.svg",
-          "name": "balance",
-          "glass": false,
-          "position": {
-            "scale": 1,
-            "translation-in-points": [
+          "fill-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "srgb:0.81978,0.82659,0.84701,1.00000"
+              }
+            }
+          ],
+          "glass" : true,
+          "image-name" : "balance-knob.svg",
+          "name" : "balance-knob",
+          "opacity" : 1,
+          "position" : {
+            "scale" : 1.12,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "fill-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "srgb:1.00000,1.00000,1.00000,1.00000"
+              }
+            }
+          ],
+          "glass" : true,
+          "image-name" : "balance-track.svg",
+          "name" : "balance-track",
+          "opacity" : 0.8,
+          "position" : {
+            "scale" : 1.12,
+            "translation-in-points" : [
               0,
               0
             ]
           }
         }
       ],
-      "shadow": {
-        "kind": "neutral",
-        "opacity": 0.3
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.3
       },
-      "translucency": {
-        "enabled": true,
-        "value": 0
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0
       }
     },
     {
-      "layers": [
+      "blur-material" : 0.5,
+      "layers" : [
         {
-          "image-name": "body.svg",
-          "name": "body",
-          "glass": true,
-          "position": {
-            "scale": 1,
-            "translation-in-points": [
+          "glass" : true,
+          "image-name" : "lock.svg",
+          "name" : "lock",
+          "opacity" : 0.8,
+          "position" : {
+            "scale" : 1.12,
+            "translation-in-points" : [
               0,
               0
             ]
           }
         }
       ],
-      "shadow": {
-        "kind": "neutral",
-        "opacity": 0.5
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
       },
-      "translucency": {
-        "enabled": true,
-        "value": 0.2
-      }
-    },
-    {
-      "layers": [
-        {
-          "image-name": "shackle.svg",
-          "name": "shackle",
-          "glass": true,
-          "opacity": 0.9,
-          "position": {
-            "scale": 1,
-            "translation-in-points": [
-              0,
-              0
-            ]
-          }
-        }
-      ],
-      "shadow": {
-        "kind": "neutral",
-        "opacity": 0.4
-      },
-      "translucency": {
-        "enabled": true,
-        "value": 0.4
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
       }
     }
   ],
-  "supported-platforms": {
-    "squares": [
+  "supported-platforms" : {
+    "squares" : [
       "macOS"
     ]
   }

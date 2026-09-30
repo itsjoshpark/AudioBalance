@@ -1,7 +1,7 @@
 import AppKit
 
-/// Entry point for the background agent launched by launchd from
-/// `Contents/Library/LaunchAgents/dev.joshuapark.AudioBalance.Agent.plist`.
+/// Entry point for the background agent, a login item in `Contents/Library/LoginItems` that the
+/// settings app registers with `SMAppService.loginItem(identifier:)`.
 @main
 enum AgentMain {
     static func main() {

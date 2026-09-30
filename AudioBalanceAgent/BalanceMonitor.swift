@@ -24,6 +24,7 @@ final class BalanceMonitor {
     /// Applies a new lock point right away. This is the user's own choice, so it isn't
     /// counted or announced as a correction.
     func lockPointDidChange() {
+        logger.info("Lock point is now \(self.settings.lockPoint)")
         scheduleCheck(countsAsFix: false)
     }
 

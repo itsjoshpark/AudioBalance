@@ -1,14 +1,27 @@
 import Foundation
+import Security
 
 /// Settings shared between the settings app and the background agent.
 ///
-/// Both processes read and write the settings app's preferences domain; neither is sandboxed.
+/// Both processes are sandboxed, so they share preferences through the ``appGroup`` container.
 /// After writing, the app posts ``Notification/settingsChanged`` so the agent reloads immediately,
 /// and the agent posts ``Notification/balanceFixed`` after each correction.
 nonisolated struct SharedSettings: @unchecked Sendable {
     static let domain = "dev.joshuapark.AudioBalance"
     static let agentBundleIdentifier = "dev.joshuapark.AudioBalance.Agent"
-    static let agentPlistName = "dev.joshuapark.AudioBalance.Agent.plist"
+    /// The app group shared by the app and the agent, read from this process's entitlements
+    /// (`$(TeamIdentifierPrefix)dev.joshuapark.AudioBalance.shared`), so the team prefix comes from
+    /// signing. `nil` in unsigned builds, which aren't sandboxed.
+    static let appGroup: String? = {
+        guard let task = SecTaskCreateFromSelf(nil),
+              let groups = SecTaskCopyValueForEntitlement(task, "com.apple.security.application-groups" as CFString, nil)
+                as? [String]
+        else { return nil }
+        return groups.first { $0.hasSuffix("\(domain).shared") }
+    }()
+
+    /// The preferences domain both processes use.
+    static var suiteName: String { appGroup ?? domain }
 
     enum Key {
         static let lockPoint = "lockPoint"
@@ -27,11 +40,11 @@ nonisolated struct SharedSettings: @unchecked Sendable {
     init(defaults: UserDefaults? = nil) {
         if let defaults {
             self.defaults = defaults
-        } else if Bundle.main.bundleIdentifier == Self.domain {
-            // A suite named after the running app's own bundle identifier is not allowed.
+        } else if Bundle.main.bundleIdentifier == Self.suiteName {
+            // Unsigned builds fall back to the app's own domain, and a suite can't be named after it.
             self.defaults = .standard
         } else {
-            self.defaults = UserDefaults(suiteName: Self.domain) ?? .standard
+            self.defaults = UserDefaults(suiteName: Self.suiteName) ?? .standard
         }
         self.defaults.register(defaults: [
             Key.lockPoint: BalancePolicy.center,
@@ -59,7 +72,20 @@ nonisolated struct SharedSettings: @unchecked Sendable {
 
     /// Re-reads values another process may have written.
     func synchronize() {
-        CFPreferencesAppSynchronize(Self.domain as CFString)
+        CFPreferencesAppSynchronize(Self.suiteName as CFString)
+    }
+
+    /// Copies settings saved before the app was sandboxed, when they lived in the app's own
+    /// domain (now migrated into its container), into the app group. Runs once.
+    func migrateFromAppDomain() {
+        let keys = [Key.lockPoint, Key.notifyOnFix, Key.lastFixDate, Key.lastFixDevice]
+        guard let appGroup = Self.appGroup else { return }
+        let current = defaults.persistentDomain(forName: appGroup) ?? [:]
+        guard keys.allSatisfy({ current[$0] == nil }),
+              let old = UserDefaults.standard.persistentDomain(forName: Self.domain) else { return }
+        for key in keys {
+            if let value = old[key] { defaults.set(value, forKey: key) }
+        }
     }
 
     static func post(_ name: Foundation.Notification.Name) {

@@ -6,6 +6,8 @@
 
 Keeps your Mac's left–right audio balance locked where you set it. AirPods and some other devices sometimes drift off-center.
 
+![The Audio Balance settings window with the balance locked at center](.github/images/screenshot.png)
+
 ## Inspired by Balance Lock
 
 Audio Balance is inspired by [Balance Lock](https://www.tunabellysoftware.com/balance_lock/) from Tunabelly Software. If you use an older Mac, Balance Lock is a good choice: it supports macOS 10.12 and later, while Audio Balance needs macOS 15. The main differences:

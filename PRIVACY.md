@@ -10,7 +10,7 @@ it. It runs entirely on your Mac and does not collect, store, transmit, or sell 
 - **None.** Audio Balance does not collect personal information or identifiers, and has no analytics
   or telemetry. It makes no network connections.
 - **Local settings only.** Your lock point, notification preference, and the time and device name of
-  the last correction are saved in the `dev.joshuapark.AudioBalance` preferences on your Mac.
+  the last correction are saved in the app's sandboxed group container on your Mac.
 
 ## Permissions
 

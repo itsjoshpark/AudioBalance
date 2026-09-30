@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		AB0000000000000000000070 /* Audio Balance Agent.app in Embed Login Item */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000011 /* Audio Balance Agent.app */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		AB0000000000000000000071 /* dev.joshuapark.AudioBalance.Agent.plist in Embed Launch Agent */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000013 /* dev.joshuapark.AudioBalance.Agent.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,24 +39,12 @@
 			name = "Embed Login Item";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		AB0000000000000000000044 /* Embed Launch Agent */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = Contents/Library/LaunchAgents;
-			dstSubfolderSpec = 1;
-			files = (
-				AB0000000000000000000071 /* dev.joshuapark.AudioBalance.Agent.plist in Embed Launch Agent */,
-			);
-			name = "Embed Launch Agent";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		AB0000000000000000000010 /* Audio Balance.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Audio Balance.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB0000000000000000000011 /* Audio Balance Agent.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Audio Balance Agent.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB0000000000000000000012 /* AudioBalanceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AudioBalanceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		AB0000000000000000000013 /* dev.joshuapark.AudioBalance.Agent.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = dev.joshuapark.AudioBalance.Agent.plist; path = LaunchAgents/dev.joshuapark.AudioBalance.Agent.plist; sourceTree = "<group>"; };
 		AB0000000000000000000014 /* AudioBalanceUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AudioBalanceUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -133,7 +120,6 @@
 				AB0000000000000000000021 /* AudioBalanceAgent */,
 				AB0000000000000000000023 /* Shared */,
 				AB0000000000000000000024 /* Icon */,
-				AB0000000000000000000013 /* dev.joshuapark.AudioBalance.Agent.plist */,
 				AB0000000000000000000022 /* AudioBalanceTests */,
 				AB0000000000000000000025 /* AudioBalanceUITests */,
 				AB0000000000000000000003 /* Products */,
@@ -162,7 +148,6 @@
 				AB0000000000000000000041 /* Frameworks */,
 				AB0000000000000000000042 /* Resources */,
 				AB0000000000000000000043 /* Embed Login Item */,
-				AB0000000000000000000044 /* Embed Launch Agent */,
 			);
 			buildRules = (
 			);
@@ -412,7 +397,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				CURRENT_PROJECT_VERSION = 1;
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -464,7 +449,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				CURRENT_PROJECT_VERSION = 1;
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -485,11 +470,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				ENABLE_APP_SANDBOX = NO;
+				CODE_SIGN_ENTITLEMENTS = AudioBalance/AudioBalance.entitlements;
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Audio Balance";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Joshua Park. Licensed under the GPLv3.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -506,11 +493,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				ENABLE_APP_SANDBOX = NO;
+				CODE_SIGN_ENTITLEMENTS = AudioBalance/AudioBalance.entitlements;
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Audio Balance";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Joshua Park. Licensed under the GPLv3.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -527,11 +516,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				ENABLE_APP_SANDBOX = NO;
+				CODE_SIGN_ENTITLEMENTS = AudioBalanceAgent/AudioBalanceAgent.entitlements;
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Audio Balance";
 				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Joshua Park. Licensed under the GPLv3.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -549,11 +540,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				ENABLE_APP_SANDBOX = NO;
+				CODE_SIGN_ENTITLEMENTS = AudioBalanceAgent/AudioBalanceAgent.entitlements;
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Audio Balance";
 				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Joshua Park. Licensed under the GPLv3.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

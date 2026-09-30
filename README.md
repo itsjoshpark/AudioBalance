@@ -12,12 +12,12 @@ Audio Balance is inspired by [Balance Lock](https://www.tunabellysoftware.com/ba
 
 - Written in SwiftUI.
 - No menu bar icon: there's a settings window, plus a background agent you never see.
-- The agent is bundled inside the app and registered with `SMAppService`.
+- The agent is bundled inside the app and registered as a login item with `SMAppService`.
 - Open source under the GPLv3.
 
 ## How it works
 
-- **Background agent.** `Audio Balance Agent.app` ships inside `Audio Balance.app` and is registered with `SMAppService` from `Contents/Library/LaunchAgents`, so nothing is installed in `~/Library/LaunchAgents`.
+- **Background agent.** `Audio Balance Agent.app` ships inside `Audio Balance.app` in `Contents/Library/LoginItems` and is registered as a login item with `SMAppService`, so nothing is installed in `~/Library/LaunchAgents`. Both apps are sandboxed and share settings through an app group.
   - It listens for CoreAudio changes to the default output device and to that device's balance (virtual main balance, or stereo pan as a fallback).
   - When the balance drifts 2% or more from your lock point, the agent writes the lock point back.
   - It can optionally show a notification.
@@ -25,7 +25,7 @@ Audio Balance is inspired by [Balance Lock](https://www.tunabellysoftware.com/ba
 
 ## Building
 
-Requires Xcode 26 and macOS 15 or later.
+Requires Xcode 26 and macOS 15 or later. Set your own team in the project to build; the app group needs a team-signed build.
 
 ```sh
 xcodebuild -scheme AudioBalance -destination 'platform=macOS' build test

@@ -1,12 +1,14 @@
 # Audio Balance
 
-A macOS 15+ app that keeps the output device's left–right balance locked (AirPods often drift). It's a SwiftUI settings app plus a background agent that is bundled inside the app and registered with `SMAppService`.
+A macOS 15+ app that keeps the output device's left–right balance locked (AirPods often drift). It's a SwiftUI settings app plus a background agent that is bundled inside the app and registered as a login item with `SMAppService`. Distributed through the Mac App Store, so both apps are sandboxed.
 
 ## Build & test
 
 ```sh
 xcodebuild -scheme AudioBalance -destination 'platform=macOS' -derivedDataPath build -allowProvisioningUpdates build test
 ```
+
+The build must be signed by the team (the Development certificate for TCQ6328PP6). Ad-hoc signing (`CODE_SIGN_IDENTITY=-`) builds and launches, but macOS blocks writes to the app group container, so the agent never sees setting changes.
 
 `AudioBalanceUITests` drive the real window. They register and unregister the agent with launchd, change the default output device's balance, and leave the lock point centred. The output device must have an adjustable balance. Run only the unit tests with `-only-testing:AudioBalanceTests`. CI (`.github/workflows/ci.yml`, `macos-26`) runs only the unit tests, unsigned (`CODE_SIGNING_ALLOWED=NO`). Hosted runners can't run the UI tests.
 
@@ -15,14 +17,15 @@ Agent state: `launchctl print gui/$UID/dev.joshuapark.AudioBalance.Agent`
 
 ## Layout
 
-- `AudioBalance/`: settings app (`Audio Balance.app`). It holds `AppModel` (agent registration via `SMAppService.agent`, shared settings, live status) and `SettingsView`.
+- `AudioBalance/`: settings app (`Audio Balance.app`). It holds `AppModel` (agent registration via `SMAppService.loginItem`, shared settings, live status) and `SettingsView`.
 - `AudioBalanceAgent/`: background agent (`Audio Balance Agent.app`, `LSUIElement`). `BalanceMonitor` debounces CoreAudio change events and writes the lock point back. `Notifier` posts notifications.
 - `Shared/`: compiled into both apps and the tests.
   - `AudioOutput`: CoreAudio HAL wrappers. `PropertyListener` removes its listener on deinit. `OutputObserver` follows the default output device.
   - `BalancePolicy`: pure logic.
-  - `SharedSettings`: the `dev.joshuapark.AudioBalance` defaults domain plus distributed notifications.
+  - `SharedSettings`: the `$(TeamIdentifierPrefix)dev.joshuapark.AudioBalance.shared` app group defaults plus distributed notifications. The group name is read from the process's entitlements at runtime.
 - `Icon/AppIcon.icon`: Icon Composer icon used by both apps.
-- `LaunchAgents/dev.joshuapark.AudioBalance.Agent.plist`: copied to `Contents/Library/LaunchAgents`. The agent app is copied to `Contents/Library/LoginItems`.
+- `*.entitlements` (app sandbox and app group) and `PrivacyInfo.xcprivacy` in each app folder.
+- The agent app is copied to `Contents/Library/LoginItems`. Its launchd label is its bundle identifier.
 
 The project uses Xcode's synchronized folders (objectVersion 77). Add files by creating them in the right folder; don't edit `project.pbxproj` to list files.
 
@@ -35,7 +38,7 @@ The project uses Xcode's synchronized folders (objectVersion 77). Add files by c
   - The UI test runner is sandboxed. It can't read the app's defaults, but it can use CoreAudio and `launchctl`.
   - On macOS, static text exposes its string as the element's `value`.
 - Watch the agent process with KVO on `NSWorkspace.runningApplications`. Workspace launch/terminate notifications don't fire for UI-element apps.
-- Not sandboxed. The agent reads the app's defaults domain directly.
+- Both apps are sandboxed (Mac App Store). They share settings only through the app group, and distributed notifications must not carry a `userInfo`. Keep both entitlements files in sync.
 - Localization: every user-facing string lives in `Shared/Localizable.xcstrings` (one catalog shared by both apps).
   - Add translations for all of de, es, fr, it, ja, ko, pt-BR, zh-Hans and zh-Hant with each new string.
   - Use Apple's own wording for System Settings names. Take it from the OS `.loctable` files, e.g. `/System/Library/ExtensionKit/Extensions/LoginItems.appex/Contents/Resources/Localizable.loctable`.

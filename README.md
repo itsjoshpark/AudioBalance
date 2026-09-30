@@ -1,16 +1,10 @@
-# Audio Balance
+<p align="center">
+<img height="256" src=".github/images/icon-256.png" alt="Audio Balance icon">
+</p>
 
-Keeps your Mac's left–right audio balance locked where you set it. AirPods and some other devices sometimes drift off-centre. Audio Balance notices within about 100 ms and puts the balance back.
+<h1 align="center">Audio Balance</h1>
 
-## How it works
-
-- **Background agent.** `Audio Balance Agent.app` ships inside `Audio Balance.app` and is registered with `SMAppService` from `Contents/Library/LaunchAgents`, so nothing is installed in `~/Library/LaunchAgents`.
-  - It listens for CoreAudio changes to the default output device and to that device's balance (virtual main balance, or stereo pan as a fallback).
-  - When the balance drifts 2% or more from your lock point, the agent writes the lock point back.
-  - It can optionally show a notification.
-- **Settings app.** Turn Audio Balance on or off, choose the lock point, turn notifications on or off, and see the current device, its balance and the last correction. Closing the window leaves the agent running. You can also manage it in System Settings › General › Login Items & Extensions.
-
-Available in English, German, Spanish, French, Italian, Japanese, Korean, Brazilian Portuguese, and Simplified and Traditional Chinese.
+Keeps your Mac's left–right audio balance locked where you set it. AirPods and some other devices sometimes drift off-center.
 
 ## Inspired by Balance Lock
 
@@ -21,6 +15,14 @@ Audio Balance is inspired by [Balance Lock](https://www.tunabellysoftware.com/ba
 - The agent is bundled inside the app and registered with `SMAppService`.
 - Open source under the GPLv3.
 
+## How it works
+
+- **Background agent.** `Audio Balance Agent.app` ships inside `Audio Balance.app` and is registered with `SMAppService` from `Contents/Library/LaunchAgents`, so nothing is installed in `~/Library/LaunchAgents`.
+  - It listens for CoreAudio changes to the default output device and to that device's balance (virtual main balance, or stereo pan as a fallback).
+  - When the balance drifts 2% or more from your lock point, the agent writes the lock point back.
+  - It can optionally show a notification.
+- **Settings app.** Turn Audio Balance on or off, choose the lock point, turn notifications on or off, and see the current device, its balance and the last correction. Closing the window leaves the agent running. You can also manage it in System Settings › General › Login Items & Extensions.
+
 ## Building
 
 Requires Xcode 26 and macOS 15 or later.
@@ -30,6 +32,10 @@ xcodebuild -scheme AudioBalance -destination 'platform=macOS' build test
 ```
 
 The UI tests drive the real app. They register the background agent and change your output device's balance, then restore both. CI runs only the unit tests.
+
+## Privacy
+
+Audio Balance collects no data. See [PRIVACY.md](PRIVACY.md).
 
 ## License
 

@@ -12,10 +12,10 @@ Keeps your Mac's left–right audio balance locked where you set it. AirPods and
 
 Audio Balance is inspired by [Balance Lock](https://www.tunabellysoftware.com/balance_lock/) from Tunabelly Software. If you use an older Mac, Balance Lock is a good choice: it supports macOS 10.12 and later, while Audio Balance needs macOS 15. The main differences:
 
-- Written in SwiftUI.
+- Written in modern SwiftUI architecture.
 - No menu bar icon: there's a settings window, plus a background agent you never see.
 - The agent is bundled inside the app and registered as a login item with `SMAppService`.
-- Open source under the GPLv3.
+- Open source.
 
 ## How it works
 

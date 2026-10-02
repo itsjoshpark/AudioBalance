@@ -1,5 +1,5 @@
 <p align="center">
-<img height="256" src=".github/images/icon-256.png" alt="Audio Balance icon">
+<img height="256" src=".github/images/AppIcon-macOS-Default-256@2x.png" alt="Audio Balance icon">
 </p>
 
 <h1 align="center">Audio Balance</h1>

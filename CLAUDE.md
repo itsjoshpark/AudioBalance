@@ -25,7 +25,7 @@ The 🚀 Release workflow (`.github/workflows/release.yml`, run manually from ma
 2. Run the workflow with a release type. Try a dry run first: it archives and exports the `.pkg` as an artifact but uploads nothing.
 3. Submit the build for review, with its "What's New" text, in App Store Connect.
 
-The version is `MARKETING_VERSION` / `CURRENT_PROJECT_VERSION` in the project-level Debug and Release settings of `project.pbxproj`. Don't set them per target. The workflow commits the bump back to main, and the build number is the commit count. `scripts/project-version.sh` and `scripts/bump-version.sh` have tests (`scripts/*.test.sh`) that CI runs.
+The version is `MARKETING_VERSION` / `CURRENT_PROJECT_VERSION` in the project-level Debug and Release settings of `project.pbxproj`. Don't set them per target. The workflow passes the new version to `xcodebuild` and commits it back to `project.pbxproj` after the release. The build number is the commit count. `scripts/project-version.sh` (shared with FrontRow) and `scripts/bump-version.sh` have tests (`scripts/*.test.sh`) that CI runs.
 
 ## Layout
 

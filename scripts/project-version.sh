@@ -1,82 +1,83 @@
 #!/bin/bash
-# Reads and writes Audio Balance's version, which lives in the project-level Debug and
-# Release build settings of AudioBalance.xcodeproj/project.pbxproj. Every target
-# inherits them, so the app and the embedded agent always ship the same version.
+# Reads and writes the version settings in project.pbxproj.
 #
-#   project-version.sh read  AudioBalance.xcodeproj/project.pbxproj
-#   project-version.sh write AudioBalance.xcodeproj/project.pbxproj 1.2.0 57
+#   project-version.sh read-marketing AudioBalance.xcodeproj/project.pbxproj
+#   project-version.sh read-build     AudioBalance.xcodeproj/project.pbxproj
+#   project-version.sh write          AudioBalance.xcodeproj/project.pbxproj 2.11.0 206
 #
-# Each setting must appear exactly twice (Debug and Release); anything else means a
-# target overrides it or the project no longer matches what this assumes, and
-# writing would be a guess.
+# MARKETING_VERSION and CURRENT_PROJECT_VERSION both live at the project level,
+# so each appears exactly twice — once per configuration. Anything else means
+# the project no longer matches what this assumes, and writing would be a guess.
 
 set -euo pipefail
+
+readonly EXPECTED_OCCURRENCES=2
 
 die() {
   echo "project-version: $1" >&2
   exit 1
 }
 
-expected_count=2
-
-setting_lines() {
+read_setting() {
   local pbxproj="$1" setting="$2"
-  local count
-  count="$(grep -cE "^[[:space:]]+$setting = [^;]*;$" "$pbxproj" || true)"
-  ((count == expected_count)) || die "expected $expected_count $setting in $pbxproj, found $count"
-}
+  [[ -f "$pbxproj" ]] || die "project file not found: $pbxproj"
 
-read_version() {
-  local pbxproj="$1"
-  setting_lines "$pbxproj" MARKETING_VERSION
+  local values
+  values="$(sed -n "s/^[[:space:]]*$setting = \(.*\);$/\1/p" "$pbxproj" | sort -u)"
+  [[ -n "$values" ]] || die "$setting not found in $pbxproj"
+  [[ "$(wc -l <<<"$values")" -eq 1 ]] ||
+    die "$setting has conflicting values in $pbxproj: $(tr '\n' ' ' <<<"$values")"
 
-  local versions
-  versions="$(sed -nE 's/^[[:space:]]+MARKETING_VERSION = ([^;]*);$/\1/p' "$pbxproj" | sort -u)"
-  [[ "$(wc -l <<<"$versions" | tr -d ' ')" == 1 ]] ||
-    die "MARKETING_VERSION differs between configurations in $pbxproj: $(tr '\n' ' ' <<<"$versions")"
-  echo "$versions"
+  echo "$values"
 }
 
 command="${1-}"
 pbxproj="${2-}"
 
 case "$command" in
-  read | write)
-    [[ -f "$pbxproj" ]] || die "project file not found: $pbxproj"
+  read-marketing)
+    read_setting "$pbxproj" MARKETING_VERSION
     ;;
-  "") die "a command is required (read or write)" ;;
-  *) die "unknown command '$command'" ;;
-esac
 
-case "$command" in
-  read)
-    read_version "$pbxproj"
+  read-build)
+    read_setting "$pbxproj" CURRENT_PROJECT_VERSION
     ;;
 
   write)
     marketing="${3-}"
     build="${4-}"
+
+    [[ -f "$pbxproj" ]] || die "project file not found: $pbxproj"
     [[ "$marketing" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]] ||
       die "marketing version must be X.Y.Z, got '$marketing'"
     [[ "$build" =~ ^[0-9]+$ ]] || die "build number must be a whole number, got '$build'"
 
-    setting_lines "$pbxproj" MARKETING_VERSION
-    setting_lines "$pbxproj" CURRENT_PROJECT_VERSION
+    for setting in MARKETING_VERSION CURRENT_PROJECT_VERSION; do
+      count="$(grep -c "^[[:space:]]*$setting = .*;$" "$pbxproj" || true)"
+      (( count == EXPECTED_OCCURRENCES )) ||
+        die "expected $EXPECTED_OCCURRENCES occurrences of $setting, found $count — the project layout changed"
+    done
 
-    # Write to a temp file and move it into place only once it succeeds, so a
-    # failure cannot leave a half-written project.
+    # Write to a temp file and move into place so a failure cannot leave a
+    # half-rewritten project.
     tmp="$(mktemp)"
     trap 'rm -f "$tmp"' EXIT
 
-    sed -E -e "s/^([[:space:]]+)MARKETING_VERSION = [^;]*;$/\1MARKETING_VERSION = $marketing;/" \
-      -e "s/^([[:space:]]+)CURRENT_PROJECT_VERSION = [^;]*;$/\1CURRENT_PROJECT_VERSION = $build;/" \
+    sed -e "s/^\([[:space:]]*\)MARKETING_VERSION = .*;$/\1MARKETING_VERSION = $marketing;/" \
+      -e "s/^\([[:space:]]*\)CURRENT_PROJECT_VERSION = .*;$/\1CURRENT_PROJECT_VERSION = $build;/" \
       "$pbxproj" >"$tmp"
 
-    # mktemp creates the file as 0600; keep the project's own permissions.
-    chmod "$(stat -f %Lp "$pbxproj")" "$tmp"
     mv "$tmp" "$pbxproj"
     trap - EXIT
 
     echo "Set $pbxproj to $marketing ($build)"
+    ;;
+
+  "")
+    die "a command is required (read-marketing, read-build, or write)"
+    ;;
+
+  *)
+    die "unknown command '$command'"
     ;;
 esac

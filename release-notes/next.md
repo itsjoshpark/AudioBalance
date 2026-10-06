@@ -1,3 +1,1 @@
-- New:
-- Changed:
-- Fixed:
+Minor improvements.

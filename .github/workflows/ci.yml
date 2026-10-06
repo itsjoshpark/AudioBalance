@@ -14,7 +14,16 @@ jobs:
     name: Build and unit test
     runs-on: macos-26
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
+
+      - name: Run script tests
+        run: |
+          failures=0
+          for test in scripts/*.test.sh; do
+            echo "==> $test"
+            "$test" || failures=$((failures + 1))
+          done
+          exit "$failures"
 
       - name: Show Xcode version
         run: xcodebuild -version

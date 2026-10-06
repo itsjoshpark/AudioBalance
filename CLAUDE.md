@@ -17,6 +17,16 @@ Switching one Mac between an Xcode build (Apple Development) and the App Store b
 Agent logs: `/usr/bin/log stream --predicate 'subsystem == "dev.joshuapark.AudioBalance"' --level debug`
 Agent state: `launchctl print gui/$UID/dev.joshuapark.AudioBalance.Agent`
 
+## Release
+
+The 🚀 Release workflow (`.github/workflows/release.yml`, run manually from main) bumps the version, archives and signs with the App Store Connect API key, uploads the build to App Store Connect, tags `vX.Y.Z` and publishes a GitHub release.
+
+1. Replace `release-notes/next.md` with the notes (keep the `- New:` / `- Changed:` / `- Fixed:` shape of `release-notes/TEMPLATE.md`). The workflow refuses to run with the unedited template, then archives the file as `release-notes/<version>.md`.
+2. Run the workflow with a release type. Try a dry run first: it archives and exports the `.pkg` as an artifact but uploads nothing.
+3. Submit the build for review, with its "What's New" text, in App Store Connect.
+
+The version is `MARKETING_VERSION` / `CURRENT_PROJECT_VERSION` in the project-level Debug and Release settings of `project.pbxproj`. Don't set them per target. The workflow passes the new version to `xcodebuild` and commits it back to `project.pbxproj` after the release. The build number is the commit count. `scripts/project-version.sh` (shared with FrontRow) and `scripts/bump-version.sh` have tests (`scripts/*.test.sh`) that CI runs.
+
 ## Layout
 
 - `AudioBalance/`: settings app (`Audio Balance.app`). It holds `AppModel` (agent registration via `SMAppService.loginItem`, shared settings, live status) and `SettingsView`.

@@ -10,6 +10,8 @@ xcodebuild -scheme AudioBalance -destination 'platform=macOS' -derivedDataPath b
 
 The build must be signed by the team (the Development certificate for TCQ6328PP6). Ad-hoc signing (`CODE_SIGN_IDENTITY=-`) builds and launches, but macOS blocks writes to the app group container, so the agent never sees setting changes.
 
+Switching one Mac between an Xcode build (Apple Development) and the App Store build leaves the old login item record in Background Task Management, along with its code requirement. Until macOS replaces that record, the kernel kills the other build's agent with `Launch Constraint Violation`, and the app shows "registered but isn't running". Wait several seconds for the new "login item added" notification, then turn the switch on again. To check: `/usr/bin/log show --last 10m --predicate 'eventMessage CONTAINS "Launch Constraint"'`.
+
 `AudioBalanceUITests` drive the real window. They register and unregister the agent with launchd, change the default output device's balance, and leave the lock point centred. The output device must have an adjustable balance. Run only the unit tests with `-only-testing:AudioBalanceTests`. CI (`.github/workflows/ci.yml`, `macos-26`) runs only the unit tests, unsigned (`CODE_SIGNING_ALLOWED=NO`). Hosted runners can't run the UI tests.
 
 Agent logs: `/usr/bin/log stream --predicate 'subsystem == "dev.joshuapark.AudioBalance"' --level debug`

@@ -17,9 +17,12 @@
 # Nothing outside the runner is touched until the upload step, and a dry run
 # stops before it: it archives, signs, and exports the .pkg as an artifact only.
 #
-# If a run fails after the upload, re-running reuses the same build number and
-# App Store Connect rejects it. Land any commit on main (which bumps the count)
-# and run again.
+# After the upload, the version bump is committed to main first, and only that
+# commit is tagged and released, so the tag's source reports the version it
+# shipped as. If a run fails after the upload but before main is bumped,
+# re-running reuses the same build number and App Store Connect rejects it. Land
+# any commit on main (which bumps the count) and run again. If it fails after
+# main is bumped, the step's error says how to finish the tag and release.
 #
 # 🚨 GITHUB SECRETS REQUIRED:
 #         - AC_API_KEY_P8_BASE64: App Store Connect API key (.p8), base64 encoded:
@@ -222,8 +225,11 @@ jobs:
           pkg="$(find "$EXPORT_PATH" -maxdepth 1 -name '*.pkg' | head -1)"
           [[ -n "$pkg" ]] || { echo "::error::No .pkg in $EXPORT_PATH"; ls -la "$EXPORT_PATH"; exit 1; }
 
-          pkgutil --check-signature "$pkg"
-          pkgutil --check-signature "$pkg" | grep -q "3rd Party Mac Developer Installer" ||
+          # Captured rather than piped: `grep -q` exits on the first match, and
+          # under pipefail the writer's SIGPIPE would fail the check.
+          signature="$(pkgutil --check-signature "$pkg")"
+          echo "$signature"
+          grep -q "3rd Party Mac Developer Installer" <<<"$signature" ||
             { echo "::error::The package is not signed with a Mac Installer Distribution certificate"; exit 1; }
 
           expanded="$RUNNER_TEMP/build/expanded"
@@ -236,21 +242,25 @@ jobs:
 
           want_version="${{ steps.version.outputs.version }}"
           want_build="${{ steps.version.outputs.build }}"
+          signers=()
           for bundle in "$app" "$agent"; do
             version="$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "$bundle/Contents/Info.plist")"
             build="$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "$bundle/Contents/Info.plist")"
             [[ "$version" == "$want_version" && "$build" == "$want_build" ]] ||
               { echo "::error::$(basename "$bundle") is $version ($build), expected $want_version ($want_build)"; exit 1; }
 
-            authority="$(codesign -dvvv "$bundle" 2>&1 | sed -n 's/^Authority=//p' | head -1)"
+            info="$(codesign -dvvv "$bundle" 2>&1)"
+            authority="$(sed -n 's/^Authority=//p' <<<"$info" | sed -n 1p)"
             case "$authority" in
               "Apple Distribution"* | "3rd Party Mac Developer Application"*) ;;
               *) echo "::error::$(basename "$bundle") signed by '$authority', expected an Apple Distribution certificate"; exit 1 ;;
             esac
+            signers+=("$(basename "$bundle"): $authority")
           done
 
           echo "pkg=$pkg" >>"$GITHUB_OUTPUT"
-          echo "Verified $want_version ($want_build), signed by: $authority"
+          echo "Verified $want_version ($want_build)"
+          printf '  %s\n' "${signers[@]}"
 
       - name: Upload package as an artifact
         uses: actions/upload-artifact@v7
@@ -284,27 +294,17 @@ jobs:
         if: always()
         run: rm -f "$RUNNER_TEMP/AuthKey.p8"
 
-      - name: Tag and create the GitHub release
+      # Main is bumped first, so the tag below points at a commit whose source
+      # reports the released version and holds its archived notes. A failure
+      # here leaves no tag behind, and the next run can still pick this version.
+      - name: Record the version on main
+        id: record
         if: ${{ !inputs.dry-run }}
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          version="${{ steps.version.outputs.version }}"
-          git tag "v$version"
-          git push origin "v$version"
-
-          gh release create "v$version" \
-            --title "v$version" \
-            --notes-file "${{ steps.version.outputs.notes }}"
-
-      - name: Record the version on main
-        if: ${{ !inputs.dry-run }}
-        run: |
-          set -euo pipefail
           version="${{ steps.version.outputs.version }}"
 
           # Record what was just released, so local builds report the shipped
@@ -314,23 +314,52 @@ jobs:
 
           # Archive the notes under the version they shipped as, and leave a
           # fresh template ready for the next release.
-          git mv release-notes/next.md "release-notes/$version.md"
+          notes="release-notes/$version.md"
+          git mv "${{ steps.version.outputs.notes }}" "$notes"
           cp release-notes/TEMPLATE.md release-notes/next.md
 
           git add "$PBXPROJ" release-notes
           git commit -m "chore: release $version (${{ steps.version.outputs.build }}) [skip ci]"
 
-          # The build is already uploaded, so a rejected push would leave main
-          # reporting the previous version. Rebase onto whatever landed on main
-          # during the run and retry.
+          failed() {
+            echo "::error::$1 The build is uploaded, but $PBXPROJ on main still reports the previous version and nothing is tagged. Bump main by hand (scripts/project-version.sh write $PBXPROJ $version ${{ steps.version.outputs.build }}, and archive the notes), then tag that commit v$version and create the release."
+            exit 1
+          }
+
+          # Rebase onto whatever landed on main during the run and retry.
           for attempt in 1 2 3; do
             if git push origin HEAD:main; then
+              {
+                echo "commit=$(git rev-parse HEAD)"
+                echo "notes=$notes"
+              } >>"$GITHUB_OUTPUT"
               exit 0
             fi
+            ((attempt < 3)) || break
             echo "Push rejected (attempt $attempt), rebasing onto main"
             git fetch origin main
-            git rebase origin/main
+            if ! git rebase origin/main; then
+              git rebase --abort
+              failed "Rebasing the version bump onto main conflicted."
+            fi
           done
 
-          echo "::error::Could not push the version bump after 3 attempts. The build is uploaded and tagged, but $PBXPROJ on main still reports the previous version."
-          exit 1
+          failed "Could not push the version bump after 3 attempts."
+
+      - name: Tag and create the GitHub release
+        if: ${{ !inputs.dry-run }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          version="${{ steps.version.outputs.version }}"
+          commit="${{ steps.record.outputs.commit }}"
+
+          git tag "v$version" "$commit"
+          git push origin "v$version" ||
+            { echo "::error::Main is bumped to $version, but pushing tag v$version failed. Tag $commit as v$version and create the release by hand."; exit 1; }
+
+          gh release create "v$version" \
+            --title "v$version" \
+            --notes-file "${{ steps.record.outputs.notes }}" ||
+            { echo "::error::Tag v$version is pushed, but creating the GitHub release failed. Run: gh release create v$version --title v$version --notes-file ${{ steps.record.outputs.notes }}"; exit 1; }

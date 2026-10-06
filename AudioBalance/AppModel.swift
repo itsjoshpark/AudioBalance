@@ -60,7 +60,6 @@ final class AppModel {
         observeSystem()
         outputObserver.start()
         refresh()
-        migrateLegacyAgent()
     }
 
     // MARK: - Agent
@@ -96,22 +95,6 @@ final class AppModel {
                 logger.error("Changing agent registration failed: \(error.localizedDescription)")
                 agentError = error.localizedDescription
             }
-        }
-    }
-
-    /// Earlier versions registered the agent as a launch agent from
-    /// `Contents/Library/LaunchAgents`. Replace that registration with the login item.
-    private func migrateLegacyAgent() {
-        let legacy = SMAppService.agent(plistName: "dev.joshuapark.AudioBalance.Agent.plist")
-        guard service.status == .notRegistered, legacy.status == .enabled || isAgentRunning else { return }
-        let wasOn = isAgentRunning
-        Task {
-            do {
-                try await legacy.unregister()
-            } catch {
-                logger.info("Unregistering the legacy launch agent failed: \(error.localizedDescription)")
-            }
-            if wasOn { setOn(true) }
         }
     }
 

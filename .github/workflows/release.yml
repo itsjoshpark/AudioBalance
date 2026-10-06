@@ -359,7 +359,21 @@ jobs:
           git push origin "v$version" ||
             { echo "::error::Main is bumped to $version, but pushing tag v$version failed. Tag $commit as v$version and create the release by hand."; exit 1; }
 
-          gh release create "v$version" \
-            --title "v$version" \
-            --notes-file "${{ steps.record.outputs.notes }}" ||
-            { echo "::error::Tag v$version is pushed, but creating the GitHub release failed. Run: gh release create v$version --title v$version --notes-file ${{ steps.record.outputs.notes }}"; exit 1; }
+          # The releases API can answer a request made right after the tag push
+          # with a 5xx. Retry, and stop once the release exists, since a failed
+          # response may still have created it.
+          for attempt in 1 2 3 4 5; do
+            if gh release view "v$version" >/dev/null 2>&1 ||
+              gh release create "v$version" \
+                --verify-tag \
+                --title "v$version" \
+                --notes-file "${{ steps.record.outputs.notes }}"; then
+              exit 0
+            fi
+            ((attempt < 5)) || break
+            echo "Creating the release failed (attempt $attempt), retrying in $((attempt * 10))s"
+            sleep $((attempt * 10))
+          done
+
+          echo "::error::Tag v$version is pushed, but creating the GitHub release failed. Run: gh release create v$version --verify-tag --title v$version --notes-file ${{ steps.record.outputs.notes }}"
+          exit 1

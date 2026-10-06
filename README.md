@@ -1,10 +1,21 @@
-<p align="center">
-<img height="256" src=".github/images/AppIcon-macOS-Default-256@2x.png" alt="Audio Balance icon">
-</p>
+<div align="center">
 
-<h1 align="center">Audio Balance</h1>
+<img height="256" src=".github/images/AppIcon-macOS-Default-256@2x.png" alt="Audio Balance icon">
+
+<h1>Audio Balance</h1>
 
 Keeps your Mac's left–right audio balance locked where you set it. AirPods and some other devices sometimes drift off-center.
+
+<a href="https://apps.apple.com/app/id6817587097">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://toolbox.marketingtools.apple.com/api/v2/badges/download-on-the-app-store/white/en-us?releaseDate=1760313600" width="220" />
+    <img src="https://toolbox.marketingtools.apple.com/api/v2/badges/download-on-the-app-store/black/en-us?releaseDate=1760313600" alt="Download on the App Store" width="220" />
+  </picture>
+</a>
+
+</div>
+
+<br>
 
 ![The Audio Balance settings window with the balance locked at center](.github/images/screenshot.png)
 

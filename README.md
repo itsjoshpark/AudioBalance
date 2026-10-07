@@ -1,6 +1,9 @@
 <div align="center">
 
-<img height="256" src=".github/images/AppIcon-macOS-Default-256@2x.png" alt="Audio Balance icon">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/images/AppIcon-macOS-Dark-256@2x.png" height="256" />
+  <img src=".github/images/AppIcon-macOS-Default-256@2x.png" alt="Audio Balance icon" height="256" />
+</picture>
 
 <h1>Audio Balance</h1>
 

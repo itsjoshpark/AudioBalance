@@ -1,3 +1,1 @@
-- New:
-- Changed:
-- Fixed:
+- Changed: Simplified the copyright line in the About window.

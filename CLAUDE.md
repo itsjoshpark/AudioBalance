@@ -14,20 +14,22 @@ The build must be signed by the team (the Development certificate for TCQ6328PP6
 
 Switching one Mac between an Xcode build (Apple Development) and the App Store build leaves the old login item record in Background Task Management, along with its code requirement. Until macOS replaces that record, the kernel kills the other build's agent with `Launch Constraint Violation`, and the app shows "registered but isn't running". Wait several seconds for the new "login item added" notification, then turn the switch on again. To check: `/usr/bin/log show --last 10m --predicate 'eventMessage CONTAINS "Launch Constraint"'`.
 
-`AudioBalanceUITests` drive the real window. They register and unregister the agent with launchd, change the default output device's balance, and leave the lock point centred. The output device must have an adjustable balance. Run only the unit tests with `-only-testing:AudioBalanceTests`. CI (`.github/workflows/ci.yml`, the `xcode-27` runner with Xcode 27.2 selected) runs only the unit tests, unsigned (`CODE_SIGNING_ALLOWED=NO`). Hosted runners can't run the UI tests.
+`AudioBalanceUITests` drive the real window. They register and unregister the agent with launchd, change the default output device's balance, and leave the lock point centred. The output device must have an adjustable balance. Run only the unit tests with `-only-testing:AudioBalanceTests`. CI (`.github/workflows/ci.yml`, the `xcode-27` runner with Xcode 27.2 selected) runs only the unit tests, unsigned, with `bundle exec fastlane test`. Hosted runners can't run the UI tests.
 
 Agent logs: `/usr/bin/log stream --predicate 'subsystem == "dev.joshuapark.AudioBalance"' --level debug`
 Agent state: `launchctl print gui/$UID/dev.joshuapark.AudioBalance.Agent`
 
 ## Release
 
-The 🚀 Release workflow (`.github/workflows/release.yml`, run manually from main) bumps the version, archives and signs with the App Store Connect API key, uploads the build to App Store Connect, tags `vX.Y.Z` and publishes a GitHub release.
+The 🚀 Release workflow (`.github/workflows/release.yml`, run manually from main) batches the release notes, bumps the version, then uses fastlane (`fastlane/Fastfile`) to test, archive and sign with the App Store Connect API key and upload the build. fastlane also sets the en-US App Store "What's New" from the notes. The workflow then tags `vX.Y.Z` and publishes a GitHub release.
 
-1. Replace `release-notes/next.md` with the notes (keep the `- New:` / `- Changed:` / `- Fixed:` shape of `release-notes/TEMPLATE.md`). The workflow refuses to run with the unedited template, then archives the file as `release-notes/<version>.md`.
-2. Run the workflow with a release type. Try a dry run first: it archives and exports the `.pkg` as an artifact but uploads nothing.
-3. Submit the build for review, with its "What's New" text, in App Store Connect.
+1. Every user-facing change adds a [Changie](https://changie.dev) fragment in the same PR: `changie new` (`brew install changie`), or non-interactively `changie new --kind Fixed --body "…"`. Kinds are `New`, `Changed` and `Fixed`. Write the body for users, not as a commit summary. Changes that users don't notice (CI, refactors, docs) get no fragment. For a free-text note above the changes (e.g. `**Note**: …`), write `.changes/unreleased/header.md`.
+2. Run the workflow. The release type defaults to `auto`: `New` bumps the minor version, `Changed` and `Fixed` the patch. Try a dry run first: it archives and exports the `.pkg` as an artifact but uploads nothing. Turning off `upload-to-app-store` only validates the package with App Store Connect but still tags and releases.
+3. In App Store Connect, add "What's New" for the other languages and submit the build for review.
 
-The version is `MARKETING_VERSION` / `CURRENT_PROJECT_VERSION` in the project-level `build-settings` of `project.xcproj`, one value shared by Debug and Release. Don't set them per target or per configuration. The workflow passes the new version to `xcodebuild` and commits it back to `project.xcproj` after the release. The build number is the commit count. `scripts/project-version.sh` (shared with FrontRow) and `scripts/bump-version.sh` have tests (`scripts/*.test.sh`) that CI runs.
+The release batches the fragments into `.changes/<version>.md` (the GitHub release body and "What's New"), regenerates `CHANGELOG.md`, and Changie stamps `MARKETING_VERSION` into the project-level `build-settings` of `project.xcproj` (`replacements` in `.changie.yaml`). Don't edit those by hand or set the version per target. The build number is the commit count, passed to the build and not written back to the project. CI checks the fragments with `changie batch auto --dry-run` and runs the unit tests with `bundle exec fastlane test`.
+
+fastlane builds through `AudioBalance.xcodeproj/project.xcworkspace` and skips profile detection: it reads projects with the `xcodeproj` gem, which can't parse `project.xcproj`.
 
 ## Layout
 

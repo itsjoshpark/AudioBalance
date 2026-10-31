@@ -1,0 +1,125 @@
+# Build, test and App Store lanes. The release workflow (.github/workflows/release.yml)
+# drives these; versioning and release notes come from Changie (.changie.yaml).
+#
+#   bundle exec fastlane test
+#   bundle exec fastlane build version:1.2.3 build:42
+#   bundle exec fastlane release_app_store version:1.2.3 pkg:path notes_file:path [verify_only:true]
+#
+# Signing uses the App Store Connect API key (cloud-managed certificates) when
+# AC_KEY_PATH, AC_API_KEY_ID and AC_API_ISSUER_ID are set, and the local
+# keychain and Xcode accounts otherwise.
+
+default_platform(:mac)
+
+PROJECT = "AudioBalance.xcodeproj"
+# gym reads projects with the xcodeproj gem, which can't parse project.xcproj.
+# Through a workspace it skips projects it can't open and asks xcodebuild instead.
+WORKSPACE = "AudioBalance.xcodeproj/project.xcworkspace"
+SCHEME = "AudioBalance"
+TEAM_ID = "TCQ6328PP6"
+APP_IDENTIFIER = "dev.joshuapark.AudioBalance"
+
+def api_key_args
+  return "" unless ENV["AC_KEY_PATH"].to_s != ""
+
+  [
+    "-authenticationKeyPath #{ENV.fetch('AC_KEY_PATH').shellescape}",
+    "-authenticationKeyID #{ENV.fetch('AC_API_KEY_ID').shellescape}",
+    "-authenticationKeyIssuerID #{ENV.fetch('AC_API_ISSUER_ID').shellescape}"
+  ].join(" ")
+end
+
+def build_root
+  ENV.fetch("BUILD_ROOT", File.expand_path("../build/release", __dir__))
+end
+
+platform :mac do
+  desc "Unit tests, unsigned. UI tests are local-only (see CLAUDE.md)."
+  lane :test do
+    run_tests(
+      project: PROJECT,
+      scheme: SCHEME,
+      destination: "platform=macOS",
+      only_testing: ["AudioBalanceTests"],
+      derived_data_path: File.join(build_root, "TestDerivedData"),
+      xcargs: "CODE_SIGNING_ALLOWED=NO",
+      output_directory: File.join(build_root, "test_output")
+    )
+  end
+
+  desc "Archive and export a signed .pkg for App Store Connect"
+  lane :build do |options|
+    version = options.fetch(:version)
+    build = options.fetch(:build)
+    UI.user_error!("version must be X.Y.Z, got '#{version}'") unless version.to_s.match?(/\A\d+\.\d+\.\d+\z/)
+    UI.user_error!("build must be a whole number, got '#{build}'") unless build.to_s.match?(/\A\d+\z/)
+
+    build_mac_app(
+      workspace: WORKSPACE,
+      scheme: SCHEME,
+      configuration: "Release",
+      destination: "generic/platform=macOS",
+      archive_path: File.join(build_root, "AudioBalance.xcarchive"),
+      derived_data_path: File.join(build_root, "DerivedData"),
+      output_directory: File.join(build_root, "export"),
+      # gym's name for Xcode's "app-store-connect" method; it rejects the new name.
+      export_method: "app-store",
+      export_team_id: TEAM_ID,
+      export_options: {
+        # Automatic signing with the App Store Connect API key (cloud-managed
+        # certificates) on CI, so no certificate or profile secrets are needed.
+        signingStyle: "automatic",
+        # The version and build number come from the lane; Xcode must not change them.
+        manageAppVersionAndBuildNumber: false,
+        uploadSymbols: true,
+        # Export only; release_app_store uploads.
+        destination: "export"
+      },
+      # gym's profile detection parses project.pbxproj with the xcodeproj gem,
+      # which can't read the JSON project format (project.xcproj). Signing is
+      # automatic, so there is no mapping to detect.
+      skip_profile_detection: true,
+      xcargs: [
+        "-allowProvisioningUpdates",
+        api_key_args,
+        "CURRENT_PROJECT_VERSION=#{build}",
+        "MARKETING_VERSION=#{version}",
+        "DEVELOPMENT_TEAM=#{TEAM_ID}",
+        "CODE_SIGN_STYLE=Automatic"
+      ].join(" "),
+      export_xcargs: ["-allowProvisioningUpdates", api_key_args].join(" "),
+      clean: true
+    )
+  end
+
+  desc "Upload the .pkg and set the en-US \"What's New\" (or only validate the package)"
+  lane :release_app_store do |options|
+    version = options.fetch(:version)
+    notes = File.read(options.fetch(:notes_file)).strip
+    UI.user_error!("The release notes are empty") if notes.empty?
+    verify_only = options[:verify_only].to_s == "true"
+
+    api_key = app_store_connect_api_key(
+      key_id: ENV.fetch("AC_API_KEY_ID"),
+      issuer_id: ENV.fetch("AC_API_ISSUER_ID"),
+      key_filepath: ENV.fetch("AC_KEY_PATH")
+    )
+
+    upload_to_app_store(
+      api_key: api_key,
+      app_identifier: APP_IDENTIFIER,
+      platform: "osx",
+      pkg: options.fetch(:pkg),
+      app_version: version,
+      # The App Store shows plain text, so drop Markdown emphasis.
+      release_notes: { "en-US" => notes.gsub("**", "") },
+      verify_only: verify_only,
+      skip_screenshots: true,
+      ignore_language_directory_validation: true,
+      submit_for_review: false,
+      automatic_release: false,
+      run_precheck_before_submit: false,
+      force: true
+    )
+  end
+end

@@ -8,9 +8,9 @@
 # processing finishes; submitting it for review — and the App Store "What's New"
 # text — is done there.
 #
-# The marketing version is read from project.pbxproj and bumped by the chosen
+# The marketing version is read from project.xcproj and bumped by the chosen
 # amount; the build number is the commit count and is never read back as input.
-# Both are passed to xcodebuild, then written back to project.pbxproj and
+# Both are passed to xcodebuild, then written back to project.xcproj and
 # committed to main after the release — so a local build always reports the last
 # release.
 #
@@ -61,12 +61,12 @@ concurrency:
 jobs:
   release:
     name: Release
-    runs-on: macos-26
+    runs-on: xcode-27
     permissions:
       contents: write
     env:
       TEAM_ID: TCQ6328PP6
-      PBXPROJ: AudioBalance.xcodeproj/project.pbxproj
+      XCPROJ: AudioBalance.xcodeproj/project.xcproj
 
     steps:
       - name: Checkout
@@ -76,10 +76,10 @@ jobs:
           # every build number already uploaded.
           fetch-depth: 0
 
-      - name: Setup Xcode Version
-        uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: latest-stable
+      # The project uses Xcode's JSON project format (project.xcproj), which
+      # needs Xcode 27.2. The xcode-27 image defaults to an older Xcode 27.
+      - name: Select Xcode 27.2
+        run: sudo xcode-select -s /Applications/Xcode_27.2.app
 
       # The runner context is unavailable in job-level env, so these are set here.
       - name: Set build paths
@@ -112,7 +112,7 @@ jobs:
 
           # The marketing version is authoritative in the project file; the build
           # number is mechanical and never read back as input.
-          current="$(./scripts/project-version.sh read-marketing "$PBXPROJ")"
+          current="$(./scripts/project-version.sh read-marketing "$XCPROJ")"
           version="$(./scripts/bump-version.sh "$current" "${{ inputs.release-type }}")"
           build="$(git rev-list --count HEAD)"
 
@@ -309,7 +309,7 @@ jobs:
 
           # Record what was just released, so local builds report the shipped
           # version and the next run has a marketing version to bump from.
-          ./scripts/project-version.sh write "$PBXPROJ" \
+          ./scripts/project-version.sh write "$XCPROJ" \
             "$version" "${{ steps.version.outputs.build }}"
 
           # Archive the notes under the version they shipped as, and leave a
@@ -318,11 +318,11 @@ jobs:
           git mv "${{ steps.version.outputs.notes }}" "$notes"
           cp release-notes/TEMPLATE.md release-notes/next.md
 
-          git add "$PBXPROJ" release-notes
+          git add "$XCPROJ" release-notes
           git commit -m "chore: release $version (${{ steps.version.outputs.build }}) [skip ci]"
 
           failed() {
-            echo "::error::$1 The build is uploaded, but $PBXPROJ on main still reports the previous version and nothing is tagged. Bump main by hand (scripts/project-version.sh write $PBXPROJ $version ${{ steps.version.outputs.build }}, and archive the notes), then tag that commit v$version and create the release."
+            echo "::error::$1 The build is uploaded, but $XCPROJ on main still reports the previous version and nothing is tagged. Bump main by hand (scripts/project-version.sh write $XCPROJ $version ${{ steps.version.outputs.build }}, and archive the notes), then tag that commit v$version and create the release."
             exit 1
           }
 

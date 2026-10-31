@@ -4,6 +4,8 @@ A macOS 15+ app that keeps the output device's left–right balance locked (AirP
 
 ## Build & test
 
+Building needs Xcode 27.2 or later (on macOS Tahoe 26.6 or later): the project uses Xcode's JSON project format, `AudioBalance.xcodeproj/project.xcproj`.
+
 ```sh
 xcodebuild -scheme AudioBalance -destination 'platform=macOS' -derivedDataPath build -allowProvisioningUpdates build test
 ```
@@ -12,7 +14,7 @@ The build must be signed by the team (the Development certificate for TCQ6328PP6
 
 Switching one Mac between an Xcode build (Apple Development) and the App Store build leaves the old login item record in Background Task Management, along with its code requirement. Until macOS replaces that record, the kernel kills the other build's agent with `Launch Constraint Violation`, and the app shows "registered but isn't running". Wait several seconds for the new "login item added" notification, then turn the switch on again. To check: `/usr/bin/log show --last 10m --predicate 'eventMessage CONTAINS "Launch Constraint"'`.
 
-`AudioBalanceUITests` drive the real window. They register and unregister the agent with launchd, change the default output device's balance, and leave the lock point centred. The output device must have an adjustable balance. Run only the unit tests with `-only-testing:AudioBalanceTests`. CI (`.github/workflows/ci.yml`, `macos-26`) runs only the unit tests, unsigned (`CODE_SIGNING_ALLOWED=NO`). Hosted runners can't run the UI tests.
+`AudioBalanceUITests` drive the real window. They register and unregister the agent with launchd, change the default output device's balance, and leave the lock point centred. The output device must have an adjustable balance. Run only the unit tests with `-only-testing:AudioBalanceTests`. CI (`.github/workflows/ci.yml`, the `xcode-27` runner with Xcode 27.2 selected) runs only the unit tests, unsigned (`CODE_SIGNING_ALLOWED=NO`). Hosted runners can't run the UI tests.
 
 Agent logs: `/usr/bin/log stream --predicate 'subsystem == "dev.joshuapark.AudioBalance"' --level debug`
 Agent state: `launchctl print gui/$UID/dev.joshuapark.AudioBalance.Agent`
@@ -25,7 +27,7 @@ The 🚀 Release workflow (`.github/workflows/release.yml`, run manually from ma
 2. Run the workflow with a release type. Try a dry run first: it archives and exports the `.pkg` as an artifact but uploads nothing.
 3. Submit the build for review, with its "What's New" text, in App Store Connect.
 
-The version is `MARKETING_VERSION` / `CURRENT_PROJECT_VERSION` in the project-level Debug and Release settings of `project.pbxproj`. Don't set them per target. The workflow passes the new version to `xcodebuild` and commits it back to `project.pbxproj` after the release. The build number is the commit count. `scripts/project-version.sh` (shared with FrontRow) and `scripts/bump-version.sh` have tests (`scripts/*.test.sh`) that CI runs.
+The version is `MARKETING_VERSION` / `CURRENT_PROJECT_VERSION` in the project-level `build-settings` of `project.xcproj`, one value shared by Debug and Release. Don't set them per target or per configuration. The workflow passes the new version to `xcodebuild` and commits it back to `project.xcproj` after the release. The build number is the commit count. `scripts/project-version.sh` (shared with FrontRow) and `scripts/bump-version.sh` have tests (`scripts/*.test.sh`) that CI runs.
 
 ## Layout
 
@@ -39,7 +41,7 @@ The version is `MARKETING_VERSION` / `CURRENT_PROJECT_VERSION` in the project-le
 - `*.entitlements` (app sandbox and app group) and `PrivacyInfo.xcprivacy` in each app folder.
 - The agent app is copied to `Contents/Library/LoginItems`. Its launchd label is its bundle identifier.
 
-The project uses Xcode's synchronized folders (objectVersion 77). Add files by creating them in the right folder; don't edit `project.pbxproj` to list files.
+The project uses Xcode's synchronized folders, stored in the JSON project format (`project.xcproj`). Add files by creating them in the right folder; don't edit `project.xcproj` to list files.
 
 ## Conventions
 

@@ -41,7 +41,7 @@ Audio Balance is inspired by [Balance Lock](https://www.tunabellysoftware.com/ba
 
 ## Building
 
-Requires Xcode 26 and macOS 15 or later. Set your own team in the project to build; the app group needs a team-signed build.
+Building requires Xcode 27.2 or later, which runs on macOS Tahoe 26.6 or later. The project uses Xcode's JSON project format (`project.xcproj`). The app itself runs on macOS 15 or later. Set your own team in the project to build; the app group needs a team-signed build.
 
 ```sh
 xcodebuild -scheme AudioBalance -destination 'platform=macOS' build test

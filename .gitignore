@@ -2,3 +2,8 @@
 xcuserdata/
 build/
 DerivedData/
+vendor/bundle/
+.bundle/
+fastlane/report.xml
+fastlane/test_output/
+fastlane/README.md

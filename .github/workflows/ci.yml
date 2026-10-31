@@ -16,14 +16,21 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Run script tests
+      - name: Install Changie
+        uses: miniscruff/changie-action@v3
+        with:
+          version: v1.26.0
+
+      # Every fragment must parse and have a known kind, or the release would
+      # fail at its first step.
+      - name: Check the Changie fragments
         run: |
-          failures=0
-          for test in scripts/*.test.sh; do
-            echo "==> $test"
-            "$test" || failures=$((failures + 1))
-          done
-          exit "$failures"
+          set -euo pipefail
+          if compgen -G ".changes/unreleased/*.yaml" >/dev/null; then
+            changie batch auto --dry-run
+          else
+            echo "No unreleased changes"
+          fi
 
       # The project uses Xcode's JSON project format (project.xcproj), which
       # needs Xcode 27.2. The xcode-27 image defaults to an older Xcode 27.
@@ -33,13 +40,13 @@ jobs:
       - name: Show Xcode version
         run: xcodebuild -version
 
+      - name: Set up Ruby and fastlane
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+          bundler-cache: true
+
       # UI tests are local-only: they need a real audio output device, launchd
       # registration and accessibility access, none of which hosted runners have.
-      - name: Build and test
-        run: |
-          xcodebuild \
-            -scheme AudioBalance \
-            -destination 'platform=macOS' \
-            -derivedDataPath build \
-            CODE_SIGNING_ALLOWED=NO \
-            build test -only-testing:AudioBalanceTests
+      - name: Build and unit test
+        run: bundle exec fastlane test

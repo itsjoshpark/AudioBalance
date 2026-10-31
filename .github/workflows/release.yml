@@ -53,7 +53,7 @@ on:
           - major
       dry-run:
         type: boolean
-        description: "Archive and export only — no upload, tag, or release"
+        description: "Archive and export only — no upload, tag, or release (any branch)"
         required: false
         default: false
       upload-to-app-store:
@@ -110,8 +110,9 @@ jobs:
           set -euo pipefail
 
           # The version bump is committed back to main; releasing from anywhere
-          # else would strand it on a side branch.
-          if [[ "$GITHUB_REF_NAME" != "main" ]]; then
+          # else would strand it on a side branch. A dry run publishes nothing, so
+          # it can run from any branch.
+          if [[ "$GITHUB_REF_NAME" != "main" && "${{ inputs.dry-run }}" != "true" ]]; then
             echo "::error::Releases must be run from main, not $GITHUB_REF_NAME"
             exit 1
           fi

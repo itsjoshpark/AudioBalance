@@ -87,7 +87,9 @@ platform :mac do
         "DEVELOPMENT_TEAM=#{TEAM_ID}",
         "CODE_SIGN_STYLE=Automatic"
       ].join(" "),
-      export_xcargs: ["-allowProvisioningUpdates", api_key_args].join(" "),
+      # gym passes xcargs to the export as well, so the export gets the API key
+      # from here. Repeating it in export_xcargs makes xcodebuild fail with
+      # "option '-authenticationKeyPath' may only be provided once".
       clean: true
     )
   end

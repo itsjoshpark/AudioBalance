@@ -8,7 +8,8 @@
 #
 # Changie batches the unreleased fragments into .changes/<version>.md, updates
 # CHANGELOG.md, and stamps MARKETING_VERSION into project.xcproj. The build
-# number is the commit count; it is passed to the build and never written back.
+# number is the commit count; it is passed to the build and recorded in
+# project.xcproj with the release commit.
 # fastlane (fastlane/Fastfile) tests, archives, exports, and uploads.
 #
 # After the upload the build appears in App Store Connect (and TestFlight) once
@@ -273,11 +274,15 @@ jobs:
           # Changie's batch and merge already ran: the fragments became
           # .changes/$version.md, CHANGELOG.md was regenerated, and project.xcproj
           # carries the new marketing version.
+          # Record the shipped build number too, so local builds report what last
+          # shipped. Changie stamps only the marketing version.
+          xcrun xcodeproj setting set --project AudioBalance.xcodeproj CURRENT_PROJECT_VERSION "$build"
+
           git add -A .changes CHANGELOG.md AudioBalance.xcodeproj/project.xcproj
           git commit -m "chore: release $version ($build) [skip ci]"
 
           failed() {
-            echo "::error::$1 The build is uploaded, but main still reports the previous version and nothing is tagged. On main, run \`changie batch $version && changie merge\`, commit, then tag that commit v$version and create the release from .changes/$version.md."
+            echo "::error::$1 The build is uploaded, but main still reports the previous version and nothing is tagged. On main, run \`changie batch $version && changie merge\`, set CURRENT_PROJECT_VERSION to $build, commit, then tag that commit v$version and create the release from .changes/$version.md."
             exit 1
           }
 
